@@ -1,0 +1,52 @@
+#######################################
+#	Syntax	Coloring	Map	syslog	lib
+#######################################
+
+#######################################
+#	Datatypes	(KEYWORD1)
+#######################################
+Syslog	KEYWORD1
+
+#######################################
+#	Methods	and	Functions	(KEYWORD2)
+####################################### 
+log	KEYWORD2	log method
+
+#######################################
+#	Instances	(KEYWORD2)
+#######################################
+
+
+#######################################
+#	Constants	(LITERAL1)
+#######################################
+LOG_EMERG	LITERAL1	system is unusable
+LOG_ALERT	LITERAL1	action must be taken immediately
+LOG_CRIT	LITERAL1	critical conditions
+LOG_ERR	LITERAL1	error conditions
+LOG_WARNING	LITERAL1	warning conditions
+LOG_NOTICE	LITERAL1	normal but significant condition
+LOG_INFO	LITERAL1	informational
+LOG_DEBUG	LITERAL1	debug-level messages
+
+LOG_KERN	LITERAL1	kernel messages
+LOG_USER	LITERAL1	random user-level messages
+LOG_MAIL	LITERAL1	mail system
+LOG_DAEMON	LITERAL1	system daemons
+LOG_AUTH	LITERAL1	security/authorization messages
+LOG_SYSLOG	LITERAL1	messages generated internally by syslogd
+LOG_LPR	LITERAL1	line printer subsystem
+LOG_NEWS	LITERAL1	network news subsystem
+LOG_UUCP	LITERAL1	UUCP subsystem
+LOG_CRON	LITERAL1	clock daemon
+LOG_AUTHPRIV	LITERAL1	security/authorization messages (private)
+LOG_FTP	LITERAL1	ftp daemon
+
+LOG_LOCAL0	LITERAL1	reserved for local use
+LOG_LOCAL1	LITERAL1	reserved for local use
+LOG_LOCAL2	LITERAL1	reserved for local use
+LOG_LOCAL3	LITERAL1	reserved for local use
+LOG_LOCAL4	LITERAL1	reserved for local use
+LOG_LOCAL5	LITERAL1	reserved for local use
+LOG_LOCAL6	LITERAL1	reserved for local use
+LOG_LOCAL7	LITERAL1	reserved for local use
