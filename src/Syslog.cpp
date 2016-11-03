@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <time.h>
-#include "syslog.h"
+#include "Syslog.h"
 
 Syslog::Syslog(const char* server, int port, const char* localHostname, const char* appName, int defaultLevel) {
   this->_server = server;

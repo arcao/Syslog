@@ -14,7 +14,7 @@
 
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
-#include <syslog.h>
+#include <Syslog.h>
 
 // WIFI credentials
 #define WIFI_SSID "**************"
