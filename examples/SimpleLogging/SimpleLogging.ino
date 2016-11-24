@@ -1,6 +1,6 @@
 /*
 
- ESP8266 Syslog example
+ ESP8266 Syslog: SimpleLogging example
 
  Demonstrates logging messages to Syslog server in IETF format (rfc5424)
  For more see https://en.wikipedia.org/wiki/Syslog
@@ -13,7 +13,6 @@
  */
 
 #include <ESP8266WiFi.h>
-#include <WiFiUdp.h>
 #include <Syslog.h>
 
 // WIFI credentials
@@ -61,7 +60,7 @@ void loop()
   syslog.log(LOG_INFO, "This is info message no. %d", iteration);
 
   // You can force set facility in level parameter for this log message. More 
-	// facilities in syslog.h or in Linux syslog documentation.
+  // facilities in syslog.h or in Linux syslog documentation.
   syslog.log(LOG_DAEMON | LOG_INFO, "This is daemon info message no. %d", iteration);
 
   iteration++;
