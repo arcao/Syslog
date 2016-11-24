@@ -63,7 +63,7 @@ Syslog &Syslog::logV(int level, const char *fmt, va_list args) {
   }
 
   // Doc: https://tools.ietf.org/html/rfc5424
-  int len = sprintf(buffer, "<%d>1 %04d-%02d-%02dT%02d:%02d:%02d %s %s - - - %s",
+  int len = sprintf(buffer, "<%d>1 %04d-%02d-%02dT%02d:%02d:%02d %s %s - - - \xEF\xBB\xBF%s",
     level,
     timeInfo->tm_year + 1900,
     timeInfo->tm_mon + 1,
