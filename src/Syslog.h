@@ -64,15 +64,26 @@ class Syslog {
   private:
     const char* _server;
     int _port;
-    const char* _localHostname;
+    const char* _deviceHostname;
     const char* _appName;
     int _defaultLevel;
 
-    WiFiUDP       _udp;
+    WiFiUDP _udp;
     
   public:
-    Syslog(const char* server, int port, const char* localHostname, const char* appName, int defaultLevel = LOG_KERN);
-    void log(int level, const char *fmt, ...);
+    Syslog();
+    Syslog(const char* server, int port, const char* deviceHostname = "-", const char* appName = "-", int defaultLevel = LOG_KERN);
+
+    Syslog &server(const char* server, int port);
+    Syslog &deviceHostname(const char* deviceHostname);
+    Syslog &appName(const char* appName);
+    Syslog &defaultLevel(int defaultLevel = LOG_KERN);
+
+    Syslog &logV(int level, const char *fmt, va_list args);
+    Syslog &log(int level, const char *fmt, ...);
+    Syslog &log(const char *fmt, ...);
+    Syslog &log(int level, String fmt, ...);
+    Syslog &log(String fmt, ...);
 };
 
 #endif

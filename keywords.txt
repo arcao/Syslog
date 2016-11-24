@@ -11,6 +11,11 @@ Syslog	KEYWORD1
 #	Methods	and	Functions	(KEYWORD2)
 ####################################### 
 log	KEYWORD2	log method
+logV	KEYWORD2	log method with var_list argument
+setServer	KEYWORD2	set a logging server
+setDeviceHostname	KEYWORD2	set a current device hostname
+setAppName	KEYWORD2	set a application name
+setDefaultLevel	KEYWORD2	set a default level
 
 #######################################
 #	Instances	(KEYWORD2)

@@ -4,31 +4,62 @@
 #include <time.h>
 #include "Syslog.h"
 
-Syslog::Syslog(const char* server, int port, const char* localHostname, const char* appName, int defaultLevel) {
+Syslog::Syslog() {
+  this->_server = NULL;
+  this->_port = 0;
+  this->_deviceHostname = "-";
+  this->_appName = "-";
+  this->_defaultLevel = LOG_KERN;
+}
+
+Syslog::Syslog(const char* server, int port, const char* deviceHostname, const char* appName, int defaultLevel) {
   this->_server = server;
   this->_port = port;
-  this->_localHostname = localHostname;
+  this->_deviceHostname = (deviceHostname == NULL) ? "-" : deviceHostname;
   this->_appName = (appName == NULL) ? "-" : appName;
   this->_defaultLevel = defaultLevel;
 }
 
-void Syslog::log(int level, const char *fmt, ...) {
+Syslog &Syslog::server(const char* server, int port) {
+  this->_server = server;
+  this->_port = port;
+  return *this;
+}
+
+Syslog &Syslog::deviceHostname(const char* deviceHostname) {
+  this->_deviceHostname = (deviceHostname == NULL) ? "-" : deviceHostname;
+  return *this;
+}
+
+Syslog &Syslog::appName(const char* appName) {
+  this->_appName = (appName == NULL) ? "-" : appName;
+  return *this;
+}
+Syslog &Syslog::defaultLevel(int defaultLevel) {
+  this->_defaultLevel = defaultLevel;
+  return *this;
+}
+
+Syslog &Syslog::logV(int level, const char *fmt, va_list args) {
   char buffer[SYSLOG_PACKET_SIZE];
   char message[SYSLOG_MESSAGE_SIZE];
-  va_list args;
 
   time_t rawtime;
   struct tm* timeInfo;
 
+  if (this->_server == NULL || this->_port == 0) {
+    return *this;
+  }
+
   time(&rawtime);
   timeInfo = localtime(&rawtime);
 
-  va_start(args, fmt);
   vsnprintf(message, SYSLOG_MESSAGE_SIZE, fmt, args);
-  va_end(args);
 
-  if (level <= LOG_DEBUG) {
-    level = level | this->_defaultLevel;
+	if (level == 0) {
+		level = this->_defaultLevel;
+	} else if (level <= LOG_DEBUG) {
+    level = LOG_MAKEPRI(LOG_FAC(this->_defaultLevel), level);
   }
 
   // Doc: https://tools.ietf.org/html/rfc5424
@@ -40,12 +71,50 @@ void Syslog::log(int level, const char *fmt, ...) {
     timeInfo->tm_hour,
     timeInfo->tm_min,
     timeInfo->tm_sec,
-    this->_localHostname,
+    this->_deviceHostname,
     this->_appName,
     message);
 
   this->_udp.beginPacket(this->_server, this->_port);
   this->_udp.write(buffer, len);
-  this->_udp.endPacket();     
+  this->_udp.endPacket();
+
+  return *this;
+}
+
+Syslog &Syslog::log(int level, const char *fmt, ...) {
+  va_list args;
+
+  va_start(args, fmt);
+  this->logV(level, fmt, args);
+  va_end(args);
+  return *this;
+}
+
+Syslog &Syslog::log(const char *fmt, ...) {
+  va_list args;
+
+  va_start(args, fmt);
+  this->logV(this->_defaultLevel, fmt, args);
+  va_end(args);
+  return *this;
+}
+
+Syslog &Syslog::log(int level, String fmt, ...) {
+  va_list args;
+
+  va_start(args, fmt);
+  this->logV(level, fmt.c_str(), args);
+  va_end(args);
+  return *this;
+}
+
+Syslog &Syslog::log(String fmt, ...) {
+  va_list args;
+
+  va_start(args, fmt);
+  this->logV(this->_defaultLevel, fmt.c_str(), args);
+  va_end(args);
+  return *this;
 }
 
