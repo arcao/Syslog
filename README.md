@@ -7,8 +7,9 @@ How to use, see [examples](https://github.com/arcao/ESP8266_Syslog/tree/master/e
 
 ## Sending time in Syslog packets
 This library is not sending time in Syslog messages by default. So Syslog server 
-use the time of receiving logging message. This is OK in most cases. Anyway you 
-can enable sending time in `src/Syslog.h` file with uncommenting below line:
+use the time of receiving logging message instead. This is OK in most cases. 
+Anyway you can enable sending time in `src/Syslog.h` file with uncommenting 
+below line:
 ```c
 // #define SYSLOG_USE_TIME_H
 ```
