@@ -5,6 +5,11 @@
 #include "Arduino.h"
 #include <WiFiUdp.h>
 
+// Uncommenting this will enable sending time in Syslog packets. Make sure you 
+// have synced time with NTP. See README.md for more.
+//
+// #define SYSLOG_USE_TIME_H
+
 #define SYSLOG_PACKET_SIZE 480
 #define SYSLOG_MESSAGE_SIZE 256
 

@@ -1,8 +1,12 @@
 #include "Arduino.h"
 #include <stdio.h>
 #include <stdarg.h>
-#include <time.h>
 #include "Syslog.h"
+
+#ifdef SYSLOG_USE_TIME_H
+#include <time.h>
+#endif
+
 
 Syslog::Syslog() {
   this->_server = NULL;
@@ -44,15 +48,19 @@ Syslog &Syslog::logV(int level, const char *fmt, va_list args) {
   char buffer[SYSLOG_PACKET_SIZE];
   char message[SYSLOG_MESSAGE_SIZE];
 
+#ifdef SYSLOG_USE_TIME_H
   time_t rawtime;
   struct tm* timeInfo;
+#endif
 
   if (this->_server == NULL || this->_port == 0) {
     return *this;
   }
 
+#ifdef SYSLOG_USE_TIME_H
   time(&rawtime);
   timeInfo = localtime(&rawtime);
+#endif
 
   vsnprintf(message, SYSLOG_MESSAGE_SIZE, fmt, args);
 
@@ -63,6 +71,7 @@ Syslog &Syslog::logV(int level, const char *fmt, va_list args) {
   }
 
   // Doc: https://tools.ietf.org/html/rfc5424
+#ifdef SYSLOG_USE_TIME_H
   int len = sprintf(buffer, "<%d>1 %04d-%02d-%02dT%02d:%02d:%02d %s %s - - - \xEF\xBB\xBF%s",
     level,
     timeInfo->tm_year + 1900,
@@ -74,6 +83,13 @@ Syslog &Syslog::logV(int level, const char *fmt, va_list args) {
     this->_deviceHostname,
     this->_appName,
     message);
+#else
+  int len = sprintf(buffer, "<%d>1 - %s %s - - - \xEF\xBB\xBF%s",
+    level,
+    this->_deviceHostname,
+    this->_appName,
+    message);
+#endif
 
   this->_udp.beginPacket(this->_server, this->_port);
   this->_udp.write(buffer, len);
@@ -117,4 +133,3 @@ Syslog &Syslog::log(String fmt, ...) {
   va_end(args);
   return *this;
 }
-
