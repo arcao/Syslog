@@ -9,7 +9,11 @@ install:
 
 env:
 - BOARD=esp01
-- BOARD=nodemcuv2
+- BOARD=uno
+- BOARD=megaatmega1280
+- BOARD=due
+- BOARD=yun
+- BOARD=mkr1000
 
 script:
 - for e in examples/*; do

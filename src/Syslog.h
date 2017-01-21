@@ -1,17 +1,13 @@
-#pragma once
 #ifndef SYSLOG_H
 #define SYSLOG_H 
 
-#include "Arduino.h"
-#include <WiFiUdp.h>
+#include <inttypes.h>
+#include <WString.h>
+#include <IPAddress.h>
+#include <Udp.h>
 
-// Uncommenting this will enable sending time in Syslog packets. Make sure you 
-// have synced time with NTP. See README.md for more.
-//
-// #define SYSLOG_USE_TIME_H
-
-#define SYSLOG_PACKET_SIZE 480
-#define SYSLOG_MESSAGE_SIZE 256
+#define SYSLOG_FMT_BUFFER_SIZE 80 // formating buffer size for logf methods
+#define SYSLOG_EMPTY_VALUE "-"
 
 /*
  * priorities/facilities are encoded into a single 32-bit quantity, where the
@@ -62,34 +58,45 @@
 
 #define LOG_NFACILITIES 24  /* current number of facilities */
 #define LOG_FACMASK 0x03f8  /* mask to extract facility part */
-        /* facility of pri */
+                            /* facility of pri */
 #define LOG_FAC(p)  (((p) & LOG_FACMASK) >> 3)
 
 class Syslog {
   private:
+    UDP* _client;
+    IPAddress _ip;
     const char* _server;
-    int _port;
+    uint16_t _port;
     const char* _deviceHostname;
     const char* _appName;
     int _defaultLevel;
 
-    WiFiUDP _udp;
-    
-  public:
-    Syslog();
-    Syslog(const char* server, int port, const char* deviceHostname = "-", const char* appName = "-", int defaultLevel = LOG_KERN);
+    Syslog &_sendLog(int level, const char *message);
+    Syslog &_sendLog(int level, const __FlashStringHelper *message);
 
-    Syslog &server(const char* server, int port);
+  public:
+    Syslog(UDP &client);
+    Syslog(UDP &client, const char* server, uint16_t port, const char* deviceHostname = "-", const char* appName = "-", int defaultLevel = LOG_KERN);
+    Syslog(UDP &client, IPAddress ip, uint16_t port, const char* deviceHostname = "-", const char* appName = "-", int defaultLevel = LOG_KERN);
+
+    Syslog &server(const char* server, uint16_t port);
+    Syslog &server(IPAddress server, uint16_t port);
     Syslog &deviceHostname(const char* deviceHostname);
     Syslog &appName(const char* appName);
     Syslog &defaultLevel(int defaultLevel = LOG_KERN);
 
-    Syslog &logV(int level, const char *fmt, va_list args);
-    Syslog &log(int level, const char *fmt, ...);
-    Syslog &log(const char *fmt, ...);
-    Syslog &log(int level, String fmt, ...);
-    Syslog &log(String fmt, ...);
+    Syslog &log(int level, const __FlashStringHelper *message);
+    Syslog &log(int level, const String &message);
+    Syslog &log(int level, const char *message);
+
+    Syslog &vlogf(int level, const char *fmt, va_list args);
+    
+    Syslog &logf(int level, const char *fmt, ...);
+    Syslog &logf(const char *fmt, ...);
+
+    Syslog &log(const __FlashStringHelper *message);
+    Syslog &log(const String &message);
+    Syslog &log(const char *message);
 };
 
 #endif
-

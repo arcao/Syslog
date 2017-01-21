@@ -3,20 +3,24 @@
  Syslog client: SimpleLogging example
 
  Demonstrates logging messages to Syslog server in IETF format (rfc5424) in 
- combination with the Ethernet library and Arduino Ethernet Shield.
-
+ combination with the ESP8266 board/library.
+ 
  For more about Syslog see https://en.wikipedia.org/wiki/Syslog
 
- created 20 Jan 2017
+ created 3 Nov 2016
  by Martin Sloup
 
  This code is in the public domain.
 
  */
 
-#include <Ethernet.h>
-#include <EthernetUdp.h>
+#include <ESP8266WiFi.h>
+#include <WiFiUdp.h>
 #include <Syslog.h>
+
+// WIFI credentials
+#define WIFI_SSID "**************"
+#define WIFI_PASS "**************"
 
 // Syslog server connection info
 #define SYSLOG_SERVER "syslog-server"
@@ -26,34 +30,32 @@
 #define DEVICE_HOSTNAME "my-device"
 #define APP_NAME "my-app"
 
-// Enter a MAC address for your controller below.
-// Newer Ethernet shields have a MAC address printed on a sticker on the shield
-byte mac[] = {
-  0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED
-};
-
 // A UDP instance to let us send and receive packets over UDP
-EthernetUDP udpClient;
+WiFiUDP udpClient;
 
 // Create a new syslog instance with LOG_KERN facility
 Syslog syslog(udpClient, SYSLOG_SERVER, SYSLOG_PORT, DEVICE_HOSTNAME, APP_NAME, LOG_KERN);
-
 int iteration = 1;
 
 void setup() {
-  // Open serial communications and wait for port to open:
-  Serial.begin(9600);
-  while (!Serial) {
-    ; // wait for serial port to connect. Needed for native USB port only
-  }
+  Serial.begin(115200);
+  Serial.println();
+  Serial.println();
 
-  // start Ethernet
-  if (Ethernet.begin(mac) == 0) {
-    Serial.println("Failed to configure Ethernet using DHCP");
-    // no point in carrying on, so do nothing forevermore:
-    for (;;)
-      ;
-  } 
+  // We start by connecting to a WiFi network
+  Serial.print("Connecting to ");
+  Serial.println(WIFI_SSID);
+  WiFi.begin(WIFI_SSID, WIFI_PASS);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("");
+
+  Serial.println("WiFi connected");
+  Serial.println("IP address: ");
+  Serial.println(WiFi.localIP());
 }
 
 void loop() {
