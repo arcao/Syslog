@@ -14,6 +14,7 @@
 
  */
 
+#include <SPI.h>
 #include <Ethernet.h>
 #include <EthernetUdp.h>
 #include <Syslog.h>
