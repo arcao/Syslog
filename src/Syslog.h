@@ -1,6 +1,7 @@
 #ifndef SYSLOG_H
 #define SYSLOG_H 
 
+#include <stdarg.h>
 #include <inttypes.h>
 #include <WString.h>
 #include <IPAddress.h>
