@@ -9,8 +9,8 @@ cache:
         - "~/.platformio"
 
 env:
-    - BOARD=esp01 PLATFORMIO_CI_SRC=examples/SimpleLoggingESP8266 PLATFORMIO_CI_EXTRA_ARGS="--project-option='lib_ignore=WiFi101'"
-    - BOARD=nodemcuv2 PLATFORMIO_CI_SRC=examples/SimpleLoggingESP8266  PLATFORMIO_CI_EXTRA_ARGS="--project-option='lib_ignore=WiFi101'"
+    - BOARD=esp01 PLATFORMIO_CI_SRC=examples/SimpleLoggingESP8266 EXTRA_ARGS="--project-option='lib_ignore=WiFi101'"
+    - BOARD=nodemcuv2 PLATFORMIO_CI_SRC=examples/SimpleLoggingESP8266 EXTRA_ARGS="--project-option='lib_ignore=WiFi101'"
     - BOARD=uno PLATFORMIO_CI_SRC=examples/SimpleLogging
     - BOARD=megaatmega1280 PLATFORMIO_CI_SRC=examples/SimpleLogging
     - BOARD=yun PLATFORMIO_CI_SRC=examples/SimpleLoggingYun
@@ -19,7 +19,12 @@ env:
 
 install:
     - pip install -U platformio
-    - platformio lib install "WiFi101"
+
+    #
+    # Libraries from PlatformIO Library Registry:
+    #
+    # http://platformio.org/lib/show/299/WiFi101
+    - platformio lib -g install 299
 
 script:
-    - platformio ci -v --lib="." --board=$BOARD $PLATFORMIO_CI_EXTRA_ARGS
+    - platformio ci -v --lib="." --board=$BOARD $EXTRA_ARGS
