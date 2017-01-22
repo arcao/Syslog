@@ -6,6 +6,12 @@
 #include <IPAddress.h>
 #include <Udp.h>
 
+// undefine ugly logf macro from avr's math.h
+// this fix compilation errors on AtmelAVR platforms
+#if defined(logf)
+#undef logf
+#endif
+
 #define SYSLOG_FMT_BUFFER_SIZE 80 // formating buffer size for logf methods
 #define SYSLOG_EMPTY_VALUE "-"
 
