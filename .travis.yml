@@ -19,7 +19,7 @@ env:
 
 install:
     - pip install -U platformio
-
+    - rm -rf ./linux
     #
     # Libraries from PlatformIO Library Registry:
     #
