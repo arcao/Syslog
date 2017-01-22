@@ -14,9 +14,12 @@ env:
     - BOARD=uno PLATFORMIO_CI_SRC=examples/SimpleLogging
     - BOARD=megaatmega1280 PLATFORMIO_CI_SRC=examples/SimpleLogging
     - BOARD=yun PLATFORMIO_CI_SRC=examples/SimpleLoggingYun
+    - BOARD=zero PLATFORMIO_CI_SRC=examples/SimpleLoggingWiFi
+    - BOARD=mkr1000USB PLATFORMIO_CI_SRC=examples/SimpleLoggingWiFi101_MKR1000    
 
 install:
     - pip install -U platformio
+    - platformio lib install "WiFi101"
 
 script:
     - platformio ci -v --lib="." --board=$BOARD
