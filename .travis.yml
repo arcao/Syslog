@@ -2,29 +2,24 @@ language: python
 python:
     - "2.7"
 
-# Cache PlatformIO packages using Travis CI container-based infrastructure
 sudo: false
 cache:
     directories:
         - "~/.platformio"
 
 env:
-    - BOARD=esp01 PLATFORMIO_CI_SRC=examples/SimpleLoggingESP8266 EXTRA_ARGS="--project-option='lib_ignore=WiFi101'"
-    - BOARD=nodemcuv2 PLATFORMIO_CI_SRC=examples/SimpleLoggingESP8266 EXTRA_ARGS="--project-option='lib_ignore=WiFi101'"
+    - BOARD=esp01 PLATFORMIO_CI_SRC=examples/SimpleLoggingESP8266
+    - BOARD=nodemcuv2 PLATFORMIO_CI_SRC=examples/SimpleLoggingESP8266
     - BOARD=uno PLATFORMIO_CI_SRC=examples/SimpleLogging
     - BOARD=megaatmega1280 PLATFORMIO_CI_SRC=examples/SimpleLogging
     - BOARD=yun PLATFORMIO_CI_SRC=examples/SimpleLoggingYun
     - BOARD=zero PLATFORMIO_CI_SRC=examples/SimpleLoggingWiFi
-    - BOARD=mkr1000USB PLATFORMIO_CI_SRC=examples/SimpleLoggingWiFi101_MKR1000    
+    - BOARD=mkr1000USB PLATFORMIO_CI_SRC=examples/SimpleLoggingWiFi101_MKR1000 EXTRA_ARGS="--project-option='lib_deps=WiFi101'"    
 
 install:
-    - pip install -U https://github.com/platformio/platformio/archive/develop.zip
+    - pip install -U platformio
     - rm -rf ./linux
-    #
-    # Libraries from PlatformIO Library Registry:
-    #
-    # http://platformio.org/lib/show/299/WiFi101
-    - platformio lib -g install 299
 
 script:
     - platformio ci -v --lib="." --board=$BOARD $EXTRA_ARGS
+    - rm -rf .platformio/lib
