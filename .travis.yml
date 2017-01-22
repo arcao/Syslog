@@ -22,4 +22,4 @@ install:
     - platformio lib install "WiFi101"
 
 script:
-    - platformio ci -v --lib="." --board=$BOARD
+    - platformio ci -v --lib="." --board=$BOARD $PLATFORMIO_CI_EXTRA_ARGS
