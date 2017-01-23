@@ -1,5 +1,6 @@
-# Syslog client
-An Arduino library for logging to Syslog server in [IETF format (rfc5424)](https://tools.ietf.org/html/rfc5424)
+# Syslog
+An Arduino library for logging to Syslog server in [IETF format (RFC 5424)](https://tools.ietf.org/html/rfc5424) and
+[BSD format (RFC 3164)](https://tools.ietf.org/html/rfc3164)
 
 [![Build Status](https://travis-ci.org/arcao/ESP8266_Syslog.svg?branch=master)](https://travis-ci.org/arcao/ESP8266_Syslog)
 
@@ -7,6 +8,8 @@ How to use, see [examples](https://github.com/arcao/ESP8266_Syslog/tree/master/e
 
 ## Features
  - Supports original syslog severity level and facility constants
+ - Supports both Syslog protocol formats: [IETF (RFC 5424)](https://tools.ietf.org/html/rfc5424) and
+[BSD (RFC 3164)](https://tools.ietf.org/html/rfc3164)
  - Supports `printf`-like formatting via `logf` methods (use `vsnprintf` method
    inside)
  - Supports fluent interface, see [AdvancedLogging](https://github.com/arcao/ESP8266_Syslog/blob/master/examples/AdvancedLogging/AdvancedLogging.ino)
@@ -32,9 +35,25 @@ of boards and shields, including:
  - [Arduino module RTL00(RTL8710AF), F11AMIM13 (RTL8711AM)](https://github.com/pvvx/RtlDuino)
  - ... you tell me!
 
+## Syslog protocol formats
+This library supports both syslog protocol formats [IETF (RFC 5424)](https://tools.ietf.org/html/rfc5424) and
+[BSD (RFC 3164)](https://tools.ietf.org/html/rfc3164). The newer IETF format is 
+used by default. If you want to use older "obsolete" BSD format, just specify it
+with `SYSLOG_PROTO_BSD` constant in a last constructor parameter.
+
+```c
+Syslog syslog(udpClient, host, port, device_hostname, app_name, default_priority, SYSLOG_PROTO_BSD);
+// or
+Syslog syslog(udpClient, ip, port, device_hostname, app_name, default_priority, SYSLOG_PROTO_BSD);
+// or
+Syslog syslog(udpClient, SYSLOG_PROTO_BSD);
+```
+
 ## Limitations
- - This library is sending empty time (`NILVALUE`) in `TIMESTAMP` field in the
-   syslog messages. Thus syslog server use a time of receiving these messages 
-   instead. This is OK in most cases.
+ - This library is sending empty timestamp in the syslog messages. For IETF 
+   format it is `NILVALUE` (char `-`) in `TIMESTAMP` field, for BSD format the 
+   `TIMESTAMP` field is completely ommited. Syslog server should use a time
+   of receiving message in this case. It is OK in most cases. This issue will be
+   fixed in some of the next releases.
  - The `logf`/`vlogf` functions alocate formatting buffer for `80` chars. If you
-   need more, please change `SYSLOG_FMT_BUFFER_SIZE` in `Syslog.h`
+   need more or less, please change `SYSLOG_FMT_BUFFER_SIZE` in `Syslog.h`

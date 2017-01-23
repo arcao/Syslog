@@ -38,7 +38,7 @@ byte mac[] = {
 EthernetUDP udpClient;
 
 // Create a new empty syslog instance
-Syslog syslog(udpClient);
+Syslog syslog(udpClient, SYSLOG_PROTO_IFTF);
 
 int iteration = 1;
 

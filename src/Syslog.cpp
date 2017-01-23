@@ -6,8 +6,9 @@
 
 // Public Methods //////////////////////////////////////////////////////////////
 
-Syslog::Syslog(UDP &client) {
+Syslog::Syslog(UDP &client, uint8_t protocol) {
   this->_client = &client;
+  this->_protocol = protocol;
   this->_server = NULL;
   this->_port = 0;
   this->_deviceHostname = SYSLOG_NILVALUE;
@@ -15,8 +16,9 @@ Syslog::Syslog(UDP &client) {
   this->_priDefault = LOG_KERN;
 }
 
-Syslog::Syslog(UDP &client, const char* server, uint16_t port, const char* deviceHostname, const char* appName, uint16_t priDefault) {
+Syslog::Syslog(UDP &client, const char* server, uint16_t port, const char* deviceHostname, const char* appName, uint16_t priDefault, uint8_t protocol) {
   this->_client = &client;
+  this->_protocol = protocol;
   this->_server = server;
   this->_port = port;
   this->_deviceHostname = (deviceHostname == NULL) ? SYSLOG_NILVALUE : deviceHostname;
@@ -24,8 +26,9 @@ Syslog::Syslog(UDP &client, const char* server, uint16_t port, const char* devic
   this->_priDefault = priDefault;
 }
 
-Syslog::Syslog(UDP &client, IPAddress ip, uint16_t port, const char* deviceHostname, const char* appName, uint16_t priDefault) {
+Syslog::Syslog(UDP &client, IPAddress ip, uint16_t port, const char* deviceHostname, const char* appName, uint16_t priDefault, uint8_t protocol) {
   this->_client = &client;
+  this->_protocol = protocol;
   this->_ip = ip;
   this->_port = port;
   this->_deviceHostname = (deviceHostname == NULL) ? SYSLOG_NILVALUE : deviceHostname;
@@ -136,14 +139,23 @@ Syslog &Syslog::_sendLog(uint16_t pri, const char *message) {
   if (result != 1)
     return *this;
 
-  // Doc: https://tools.ietf.org/html/rfc5424
+  // IETF Doc: https://tools.ietf.org/html/rfc5424
+  // BSD Doc: https://tools.ietf.org/html/rfc3164
   this->_client->print('<');
   this->_client->print(pri);
-  this->_client->print(F(">1 - "));
+  if (this->_protocol == SYSLOG_PROTO_IETF) {
+    this->_client->print(F(">1 - "));
+  } else {
+    this->_client->print(F(">"));
+  }
   this->_client->print(this->_deviceHostname);
   this->_client->print(' ');
   this->_client->print(this->_appName);
-  this->_client->print(F(" - - - \xEF\xBB\xBF"));
+  if (this->_protocol == SYSLOG_PROTO_IETF) {
+    this->_client->print(F(" - - - \xEF\xBB\xBF"));
+  } else {
+    this->_client->print(F("[0]: "));
+  }
   this->_client->print(message);
   this->_client->endPacket();
 
@@ -173,16 +185,26 @@ Syslog &Syslog::_sendLog(uint16_t pri, const __FlashStringHelper *message) {
   if (result != 1)
     return *this;
 
-  // Doc: https://tools.ietf.org/html/rfc5424
+  // IETF Doc: https://tools.ietf.org/html/rfc5424
+  // BSD Doc: https://tools.ietf.org/html/rfc3164
   this->_client->print('<');
   this->_client->print(pri);
-  this->_client->print(F(">1 - "));
+  if (this->_protocol == SYSLOG_PROTO_IETF) {
+    this->_client->print(F(">1 - "));
+  } else {
+    this->_client->print(F(">"));
+  }
   this->_client->print(this->_deviceHostname);
   this->_client->print(' ');
   this->_client->print(this->_appName);
-  this->_client->print(F(" - - - \xEF\xBB\xBF"));
+  if (this->_protocol == SYSLOG_PROTO_IETF) {
+    this->_client->print(F(" - - - \xEF\xBB\xBF"));
+  } else {
+    this->_client->print(F("[0]: "));
+  }
   this->_client->print(message);
   this->_client->endPacket();
+
 
   return *this;
 }

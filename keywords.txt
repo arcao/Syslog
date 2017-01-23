@@ -17,6 +17,7 @@ server	KEYWORD2	set a logging server
 deviceHostname	KEYWORD2	set a current device hostname
 appName	KEYWORD2	set a application name
 defaultPriority	KEYWORD2	set a default priority
+logMask	KEYWORD2	set a log mask
 
 #######################################
 #	Instances	(KEYWORD2)
@@ -59,3 +60,6 @@ LOG_LOCAL7	LITERAL1	reserved for local use
 
 LOG_MASK	LITERAL1	macro to convert severity to priMask
 LOG_UPTO	LITERAL1	macro to convert severity to priMask with allow lower severities
+
+SYSLOG_PROTO_IETF	LITERAL1	use syslog protocol IETF (RFC 5424)
+SYSLOG_PROTO_BSD	LITERAL1	use syslog protocol BSD (RFC 3164)

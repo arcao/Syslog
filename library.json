@@ -1,11 +1,11 @@
 {
-  "name": "Syslog client",
-  "keywords": "syslog,log,rfc5424,udp,ethernet,logging",
-  "description": "Syslog is a protocol that allows a machine to send event notification messages across IP networks to event message collectors - also known as Syslog Servers or Syslog Daemons. This library allows you to send Syslog messages over UDP.",
+  "name": "Syslog",
+  "keywords": "syslog,log,rfc5424,rfc3164,udp,ethernet,wifi,logging",
+  "description": "A library for logging to Syslog server over UDP protocol. Both IETF (RFC 5424) and BSD (RFC 3164) Syslog message formats are supported.",
   "repository":
   {
     "type": "git",
-    "url": "https://github.com/arcao/ESP8266_Syslog.git"
+    "url": "https://github.com/arcao/Arduino_Syslog/"
   },
   "version": "2.0.0-rc1",
   "examples": "examples/*/*.ino",
@@ -16,4 +16,4 @@
     "espressif8266",
     "espressif32"
   ] 
-}
+7}
