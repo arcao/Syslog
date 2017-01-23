@@ -9,9 +9,9 @@ How to use, see [examples](https://github.com/arcao/ESP8266_Syslog/tree/master/e
  - Supports original syslog severity level and facility constants
  - Supports `printf`-like formatting via `logf` methods (use `vsnprintf` method
    inside)
- - Supports fluent interface, see [AdvancedLogging]https://github.com/arcao/ESP8266_Syslog/blob/master/examples/AdvancedLogging/AdvancedLogging.ino)
+ - Supports fluent interface, see [AdvancedLogging](https://github.com/arcao/ESP8266_Syslog/blob/master/examples/AdvancedLogging/AdvancedLogging.ino)
    example
- - Allows to ignore sending specified severity levels with `logMask` function, see [AdvancedLogging]https://github.com/arcao/ESP8266_Syslog/blob/master/examples/AdvancedLogging/AdvancedLogging.ino)
+ - Allows to ignore sending specified severity levels with `logMask` function, see [AdvancedLogging](https://github.com/arcao/ESP8266_Syslog/blob/master/examples/AdvancedLogging/AdvancedLogging.ino)
    example
  - Independent on underlying network hardware. The network hardware library has
    to implement methods of `UDP` astract class only.
