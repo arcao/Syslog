@@ -28,4 +28,4 @@ install:
     - platformio lib -g install 299
 
 script:
-    - platformio ci -v --lib="./src" --board=$BOARD --project-option="$PROJECT_OPTION"
+    - platformio ci -v --lib="." --board=$BOARD --project-option="$PROJECT_OPTION"
