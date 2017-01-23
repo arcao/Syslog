@@ -58,42 +58,60 @@ void setup() {
   }
 
   // prepare syslog configuration here (can be anywhere before first call of 
-	// log/logf method)
+  // log/logf method)
   syslog.server(SYSLOG_SERVER, SYSLOG_PORT);
   syslog.deviceHostname(DEVICE_HOSTNAME);
   syslog.appName(APP_NAME);
-  syslog.defaultLevel(LOG_KERN);
+  syslog.defaultPriority(LOG_KERN);
 }
 
 void loop() {
-  // Severity can be found in Syslog.h. They are same like in Linux syslog.
+  // Severity levels can be found in Syslog.h. They are same like in Linux 
+  // syslog.
   syslog.log(LOG_INFO, "Begin loop");
 
-  // Log message can be formated like with printf, but result message can have
-	// 80 chars max. This limitation is because of low RAM in some hardware. But
-	// this can be increased. Search SYSLOG_FMT_BUFFER_SIZE in Syslog.h.
+  // Log message can be formated like with printf function, but result message 
+  // can have 80 chars max. This limitation is because of low RAM in some 
+  // hardware. Anyway this can be easily increased or decreased. Search 
+  // SYSLOG_FMT_BUFFER_SIZE in Syslog.h.
   syslog.logf(LOG_ERR,  "This is error message no. %d", iteration);
   syslog.logf(LOG_INFO, "This is info message no. %d", iteration);
 
-  // You can force set facility in level parameter for this log message. More 
+  // You can force set facility in pri parameter for this log message. More 
   // facilities in syslog.h or in Linux syslog documentation.
   syslog.logf(LOG_DAEMON | LOG_INFO, "This is daemon info message no. %d", 
-	  iteration);
+    iteration);
 
-  // You can set default facility and severity and use it for all log messages 
-	// (beware defaultLevel is stored permanently!)
-  syslog.defaultLevel(LOG_FTP | LOG_INFO);
+  // You can set default facility and severity level and use it for all log
+  // messages (beware defaultPriority is stored permanently!)
+  syslog.defaultPriority(LOG_FTP | LOG_INFO);
   syslog.logf("This is ftp info message no. %d", iteration);
 
-  // Return to default log facility
-  syslog.defaultLevel(LOG_KERN);
+  // Return to default facility
+  syslog.defaultPriority(LOG_KERN);
 
   // Also fluent interface is supported (beware appName is stored permanently!)
   syslog.appName(ANOTHER_APP_NAME).logf(LOG_ERR,  
-	  "This is error message no. %d from %s", iteration, ANOTHER_APP_NAME);
+    "This is error message no. %d from %s", iteration, ANOTHER_APP_NAME);
 
   // Return to default app name
   syslog.appName(APP_NAME);
+
+  // Send log messages only for selected severity levels: LOG_INFO and LOG_WARNING
+  syslog.logMask(LOG_MASK(LOG_INFO) | LOG_MASK(LOG_WARNING));
+  syslog.log(LOG_INFO, "This is logged.");
+  syslog.log(LOG_WARNING, "This is logged.");
+  syslog.log(LOG_ERR, "This is not logged.");
+
+  // Send log messages up to LOG_WARNING priority
+  syslog.logMask(LOG_UPTO(LOG_WARNING));
+  syslog.log(LOG_ERR, "This is logged.");
+  syslog.log(LOG_WARNING, "This is logged.");
+  syslog.log(LOG_NOTICE, "This is not logged.");
+  syslog.log(LOG_INFO, "This is not logged.");
+  
+  // Return logMask to default
+  syslog.logMask(LOG_UPTO(LOG_DEBUG));  
 
   // F() macro is supported too
   syslog.log(LOG_INFO, F("End loop"));

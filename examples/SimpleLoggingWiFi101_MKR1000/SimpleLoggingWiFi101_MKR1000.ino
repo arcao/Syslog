@@ -71,19 +71,21 @@ void setup() {
 }
 
 void loop() {
-  // Severity can be found in Syslog.h. They are same like in Linux syslog.
+  // Severity levels can be found in Syslog.h. They are same like in Linux 
+  // syslog.
   syslog.log(LOG_INFO, "Begin loop");
 
-  // Log message can be formated like with printf, but result message can have
-	// 80 chars max. This limitation is because of low RAM in some hardware. But
-	// this can be increased. Search SYSLOG_FMT_BUFFER_SIZE in Syslog.h.
+  // Log message can be formated like with printf function, but result message 
+  // can have 80 chars max. This limitation is because of low RAM in some 
+  // hardware. Anyway this can be easily increased or decreased. Search 
+  // SYSLOG_FMT_BUFFER_SIZE in Syslog.h.
   syslog.logf(LOG_ERR,  "This is error message no. %d", iteration);
   syslog.logf(LOG_INFO, "This is info message no. %d", iteration);
 
-  // You can force set facility in level parameter for this log message. More 
+  // You can force set facility in pri parameter for this log message. More 
   // facilities in syslog.h or in Linux syslog documentation.
   syslog.logf(LOG_DAEMON | LOG_INFO, "This is daemon info message no. %d", 
-	  iteration);
+    iteration);
 
   // F() macro is supported too
   syslog.log(LOG_INFO, F("End loop"));

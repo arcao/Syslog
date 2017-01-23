@@ -13,8 +13,10 @@
 #undef logf
 #endif
 
-#define SYSLOG_FMT_BUFFER_SIZE 80 // formating buffer size for logf methods
-#define SYSLOG_EMPTY_VALUE "-"
+// formating buffer size for logf methods (80 chars + 1 for null char)
+#define SYSLOG_FMT_BUFFER_SIZE (80 + 1)
+#define SYSLOG_NILVALUE "-"
+
 
 /*
  * priorities/facilities are encoded into a single 32-bit quantity, where the
@@ -68,6 +70,9 @@
                             /* facility of pri */
 #define LOG_FAC(p)  (((p) & LOG_FACMASK) >> 3)
 
+#define LOG_MASK(pri)  (1 << (pri))	/* mask for one priority */
+#define LOG_UPTO(pri)  ((1 << ((pri)+1)) - 1)	/* all priorities through pri */
+
 class Syslog {
   private:
     UDP* _client;
@@ -76,29 +81,32 @@ class Syslog {
     uint16_t _port;
     const char* _deviceHostname;
     const char* _appName;
-    int _defaultLevel;
+    uint16_t _priDefault;
+    uint8_t _priMask = 0xff;
 
-    Syslog &_sendLog(int level, const char *message);
-    Syslog &_sendLog(int level, const __FlashStringHelper *message);
+    Syslog &_sendLog(uint16_t pri, const char *message);
+    Syslog &_sendLog(uint16_t pri, const __FlashStringHelper *message);
 
   public:
     Syslog(UDP &client);
-    Syslog(UDP &client, const char* server, uint16_t port, const char* deviceHostname = "-", const char* appName = "-", int defaultLevel = LOG_KERN);
-    Syslog(UDP &client, IPAddress ip, uint16_t port, const char* deviceHostname = "-", const char* appName = "-", int defaultLevel = LOG_KERN);
+    Syslog(UDP &client, const char* server, uint16_t port, const char* deviceHostname = SYSLOG_NILVALUE, const char* appName = SYSLOG_NILVALUE, uint16_t priDefault = LOG_KERN);
+    Syslog(UDP &client, IPAddress ip, uint16_t port, const char* deviceHostname = SYSLOG_NILVALUE, const char* appName = SYSLOG_NILVALUE, uint16_t priDefault = LOG_KERN);
 
     Syslog &server(const char* server, uint16_t port);
     Syslog &server(IPAddress server, uint16_t port);
     Syslog &deviceHostname(const char* deviceHostname);
     Syslog &appName(const char* appName);
-    Syslog &defaultLevel(int defaultLevel = LOG_KERN);
+    Syslog &defaultPriority(uint16_t pri = LOG_KERN);
 
-    Syslog &log(int level, const __FlashStringHelper *message);
-    Syslog &log(int level, const String &message);
-    Syslog &log(int level, const char *message);
+    Syslog &logMask(uint8_t priMask);
 
-    Syslog &vlogf(int level, const char *fmt, va_list args);
+    Syslog &log(uint16_t pri, const __FlashStringHelper *message);
+    Syslog &log(uint16_t pri, const String &message);
+    Syslog &log(uint16_t pri, const char *message);
+
+    Syslog &vlogf(uint16_t pri, const char *fmt, va_list args);
     
-    Syslog &logf(int level, const char *fmt, ...);
+    Syslog &logf(uint16_t pri, const char *fmt, ...);
     Syslog &logf(const char *fmt, ...);
 
     Syslog &log(const __FlashStringHelper *message);

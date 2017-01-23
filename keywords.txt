@@ -16,7 +16,7 @@ vlogf	KEYWORD2	log method with var_list argument
 server	KEYWORD2	set a logging server
 deviceHostname	KEYWORD2	set a current device hostname
 appName	KEYWORD2	set a application name
-defaultLevel	KEYWORD2	set a default level
+defaultPriority	KEYWORD2	set a default priority
 
 #######################################
 #	Instances	(KEYWORD2)
@@ -56,3 +56,6 @@ LOG_LOCAL4	LITERAL1	reserved for local use
 LOG_LOCAL5	LITERAL1	reserved for local use
 LOG_LOCAL6	LITERAL1	reserved for local use
 LOG_LOCAL7	LITERAL1	reserved for local use
+
+LOG_MASK	LITERAL1	macro to convert severity to priMask
+LOG_UPTO	LITERAL1	macro to convert severity to priMask with allow lower severities
