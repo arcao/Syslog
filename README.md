@@ -2,9 +2,9 @@
 An Arduino library for logging to Syslog server in [IETF format (RFC 5424)](https://tools.ietf.org/html/rfc5424) and
 [BSD format (RFC 3164)](https://tools.ietf.org/html/rfc3164)
 
-[![Build Status](https://travis-ci.org/arcao/ESP8266_Syslog.svg?branch=master)](https://travis-ci.org/arcao/ESP8266_Syslog)
+[![Build Status](https://travis-ci.org/arcao/Syslog.svg?branch=master)](https://travis-ci.org/arcao/Syslog)
 
-How to use, see [examples](https://github.com/arcao/ESP8266_Syslog/tree/master/examples).
+How to use, see [examples](https://github.com/arcao/Syslog/tree/master/examples).
 
 ## Features
  - Supports original syslog severity level and facility constants
@@ -12,9 +12,9 @@ How to use, see [examples](https://github.com/arcao/ESP8266_Syslog/tree/master/e
 [BSD (RFC 3164)](https://tools.ietf.org/html/rfc3164)
  - Supports `printf`-like formatting via `logf` methods (use `vsnprintf` method
    inside)
- - Supports fluent interface, see [AdvancedLogging](https://github.com/arcao/ESP8266_Syslog/blob/master/examples/AdvancedLogging/AdvancedLogging.ino)
+ - Supports fluent interface, see [AdvancedLogging](https://github.com/arcao/Syslog/blob/master/examples/AdvancedLogging/AdvancedLogging.ino)
    example
- - Allows to ignore sending specified severity levels with `logMask` function, see [AdvancedLogging](https://github.com/arcao/ESP8266_Syslog/blob/master/examples/AdvancedLogging/AdvancedLogging.ino)
+ - Allows to ignore sending specified severity levels with `logMask` function, see [AdvancedLogging](https://github.com/arcao/Syslog/blob/master/examples/AdvancedLogging/AdvancedLogging.ino)
    example
  - Independent on underlying network hardware. The network hardware library has
    to implement methods of `UDP` astract class only.

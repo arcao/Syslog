@@ -5,7 +5,7 @@
   "repository":
   {
     "type": "git",
-    "url": "https://github.com/arcao/ESP8266_Syslog.git"
+    "url": "https://github.com/arcao/Syslog.git"
   },
   "version": "2.0.0",
   "examples": "examples/*/*.ino",
