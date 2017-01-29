@@ -7,6 +7,10 @@
 #include <IPAddress.h>
 #include <Udp.h>
 
+#if defined(__SAMD21G18A__)
+#define vsnprintf_P  vsnprintf
+#endif
+
 // undefine ugly logf macro from avr's math.h
 // this fix compilation errors on AtmelAVR platforms
 #if defined(logf)
@@ -109,7 +113,8 @@ class Syslog {
     Syslog &log(uint16_t pri, const char *message);
 
     Syslog &vlogf(uint16_t pri, const char *fmt, va_list args);
-    
+    Syslog &vlogf_P(uint16_t pri, PGM_P formatP, ...)  __attribute__ ((format (printf, 3, 4)));
+
     Syslog &logf(uint16_t pri, const char *fmt, ...);
     Syslog &logf(const char *fmt, ...);
 
