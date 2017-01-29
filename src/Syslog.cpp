@@ -42,6 +42,13 @@ Syslog &Syslog::server(const char* server, uint16_t port) {
   return *this;
 }
 
+Syslog &Syslog::server(IPAddress ip, uint16_t port) {
+  this->_ip = ip;
+  this->_port = port;
+  return *this;
+}
+
+
 Syslog &Syslog::deviceHostname(const char* deviceHostname) {
   this->_deviceHostname = (deviceHostname == NULL) ? SYSLOG_NILVALUE : deviceHostname;
   return *this;
@@ -102,6 +109,35 @@ Syslog &Syslog::logf(const char *fmt, ...) {
   return *this;
 }
 
+Syslog &Syslog::vlogf_P(uint16_t pri, PGM_P formatP, ...) {
+  va_list arg;
+  va_start(arg, formatP);
+  char* temp = new char[64];
+  if(!temp){
+    return *this;
+  }
+  char* buffer = temp;
+  size_t len = vsnprintf_P(temp, 64, formatP, arg);
+  va_end(arg);
+  if (len > 63) {
+    buffer = new char[len + 1];
+    if (!buffer) {
+      return *this;
+    }
+    va_start(arg, formatP);
+    vsnprintf_P(buffer, len + 1, formatP, arg);
+    va_end(arg);
+  }
+  this->_sendLog(pri, buffer);
+  if (buffer != temp) {
+    delete[] buffer;
+  }
+  delete[] temp;
+  return *this;
+}
+
+
+
 Syslog &Syslog::log(const __FlashStringHelper *message) {
   return this->_sendLog(this->_priDefault, message);
 }
@@ -119,7 +155,7 @@ Syslog &Syslog::log(const char *message) {
 Syslog &Syslog::_sendLog(uint16_t pri, const char *message) {
   int result;
 
-  if (this->_server == NULL || this->_port == 0)
+  if ( (this->_server == NULL && this->_ip == INADDR_NONE) || this->_port == 0)
     return *this;
 
   // Check priority against priMask values.

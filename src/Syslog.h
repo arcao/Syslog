@@ -109,7 +109,8 @@ class Syslog {
     Syslog &log(uint16_t pri, const char *message);
 
     Syslog &vlogf(uint16_t pri, const char *fmt, va_list args);
-    
+    Syslog &vlogf_P(uint16_t pri, PGM_P formatP, ...)  __attribute__ ((format (printf, 3, 4)));
+
     Syslog &logf(uint16_t pri, const char *fmt, ...);
     Syslog &logf(const char *fmt, ...);
 
