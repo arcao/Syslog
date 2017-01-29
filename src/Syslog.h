@@ -7,6 +7,10 @@
 #include <IPAddress.h>
 #include <Udp.h>
 
+#if defined(__SAMD21G18A__)
+#define vsnprintf_P  vsnprintf
+#endif
+
 // undefine ugly logf macro from avr's math.h
 // this fix compilation errors on AtmelAVR platforms
 #if defined(logf)
