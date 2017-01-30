@@ -103,7 +103,7 @@ class Syslog {
     Syslog(UDP &client, IPAddress ip, uint16_t port, const char* deviceHostname = SYSLOG_NILVALUE, const char* appName = SYSLOG_NILVALUE, uint16_t priDefault = LOG_KERN, uint8_t protocol = SYSLOG_PROTO_IETF);
 
     Syslog &server(const char* server, uint16_t port);
-    Syslog &server(IPAddress server, uint16_t port);
+    Syslog &server(IPAddress ip, uint16_t port);
     Syslog &deviceHostname(const char* deviceHostname);
     Syslog &appName(const char* appName);
     Syslog &defaultPriority(uint16_t pri = LOG_KERN);
