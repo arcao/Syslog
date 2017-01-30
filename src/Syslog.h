@@ -13,8 +13,14 @@
 #undef logf
 #endif
 
-// formating buffer size for logf methods (80 chars + 1 for null char)
-#define SYSLOG_FMT_BUFFER_SIZE (80 + 1)
+// compatibility with other platforms
+// add missing vsnprintf_P method
+#if !defined(ARDUINO_ARCH_AVR) || !defined(ARDUINO_ARCH_ESP8266) || !defined(vsnprintf_P)
+#define vsnprintf_P(buf, len, fmt, args) vsnprintf((buf), (len), (fmt), (args))
+#endif
+
+// formating buffer size for logf methods (36 chars)
+#define SYSLOG_FMT_BUFFER_SIZE 36
 #define SYSLOG_NILVALUE "-"
 
 // Syslog protocol format
@@ -109,9 +115,13 @@ class Syslog {
     Syslog &log(uint16_t pri, const char *message);
 
     Syslog &vlogf(uint16_t pri, const char *fmt, va_list args) __attribute__((format(printf, 3, 0)));
+    Syslog &vlogf_P(uint16_t pri, PGM_P fmt_P, va_list args) __attribute__((format(printf, 3, 0)));
     
     Syslog &logf(uint16_t pri, const char *fmt, ...) __attribute__((format(printf, 3, 4)));
     Syslog &logf(const char *fmt, ...) __attribute__((format(printf, 2, 3)));
+
+    Syslog &logf_P(uint16_t pri, PGM_P fmt_P, ...) __attribute__((format(printf, 3, 4)));
+    Syslog &logf_P(PGM_P fmt_P, ...) __attribute__((format(printf, 2, 3)));
 
     Syslog &log(const __FlashStringHelper *message);
     Syslog &log(const String &message);

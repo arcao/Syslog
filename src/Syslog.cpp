@@ -77,12 +77,55 @@ Syslog &Syslog::log(uint16_t pri, const char *message) {
 
 
 Syslog &Syslog::vlogf(uint16_t pri, const char *fmt, va_list args) {
-  char message[SYSLOG_FMT_BUFFER_SIZE];
+  char *message;
+  size_t len;
 
-  vsnprintf(message, SYSLOG_FMT_BUFFER_SIZE, fmt, args);
+  message = new char[SYSLOG_FMT_BUFFER_SIZE + 1];
+  if (!message)
+    return *this;
 
-  return this->_sendLog(pri, message);
+  len = vsnprintf(message, SYSLOG_FMT_BUFFER_SIZE, fmt, args);
+  if (len > SYSLOG_FMT_BUFFER_SIZE) {
+    delete[] message;
+    message = new char[len + 1];
+
+    if (!message)
+      return *this;
+
+    vsnprintf(message, SYSLOG_FMT_BUFFER_SIZE, fmt, args);
+  }
+
+  this->_sendLog(pri, message);
+
+	delete[] message;
+	return *this;
 }
+
+Syslog &Syslog::vlogf_P(uint16_t pri, PGM_P fmt_P, va_list args) {
+  char *message;
+  size_t len;
+
+  message = new char[SYSLOG_FMT_BUFFER_SIZE + 1];
+  if (!message)
+    return *this;
+
+  len = vsnprintf_P(message, SYSLOG_FMT_BUFFER_SIZE, fmt_P, args);
+  if (len > SYSLOG_FMT_BUFFER_SIZE) {
+    delete[] message;
+    message = new char[len + 1];
+
+    if (!message)
+      return *this;
+
+    vsnprintf(message, SYSLOG_FMT_BUFFER_SIZE, fmt_P, args);
+  }
+
+  this->_sendLog(pri, message);
+
+	delete[] message;
+	return *this;
+}
+
 
 Syslog &Syslog::logf(uint16_t pri, const char *fmt, ...) {
   va_list args;
@@ -98,6 +141,24 @@ Syslog &Syslog::logf(const char *fmt, ...) {
 
   va_start(args, fmt);
   this->vlogf(this->_priDefault, fmt, args);
+  va_end(args);
+  return *this;
+}
+
+Syslog &Syslog::logf_P(uint16_t pri, PGM_P fmt_P, ...) {
+  va_list args;
+
+  va_start(args, fmt_P);
+  this->vlogf_P(pri, fmt_P, args);
+  va_end(args);
+  return *this;
+}
+
+Syslog &Syslog::logf_P(PGM_P fmt_P, ...) {
+  va_list args;
+
+  va_start(args, fmt_P);
+  this->vlogf_P(this->_priDefault, fmt_P, args);
   va_end(args);
   return *this;
 }
