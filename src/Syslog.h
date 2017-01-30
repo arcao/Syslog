@@ -108,10 +108,10 @@ class Syslog {
     Syslog &log(uint16_t pri, const String &message);
     Syslog &log(uint16_t pri, const char *message);
 
-    Syslog &vlogf(uint16_t pri, const char *fmt, va_list args) __attribute__((format(printf, 2, 0)));
+    Syslog &vlogf(uint16_t pri, const char *fmt, va_list args) __attribute__((format(printf, 3, 0)));
     
-    Syslog &logf(uint16_t pri, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
-    Syslog &logf(const char *fmt, ...) __attribute__((format(printf, 1, 2)));
+    Syslog &logf(uint16_t pri, const char *fmt, ...) __attribute__((format(printf, 3, 4)));
+    Syslog &logf(const char *fmt, ...) __attribute__((format(printf, 2, 3)));
 
     Syslog &log(const __FlashStringHelper *message);
     Syslog &log(const String &message);
