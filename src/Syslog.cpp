@@ -183,7 +183,7 @@ Syslog &Syslog::log(const char *message) {
 
 // Private Methods /////////////////////////////////////////////////////////////
 
-Syslog &Syslog::_sendLog(uint16_t pri, const char *message) {
+inline Syslog &Syslog::_sendLog(uint16_t pri, const char *message) {
   int result;
 
   if ((this->_server == NULL && this->_ip == INADDR_NONE) || this->_port == 0)
@@ -229,7 +229,7 @@ Syslog &Syslog::_sendLog(uint16_t pri, const char *message) {
   return *this;
 }
 
-Syslog &Syslog::_sendLog(uint16_t pri, const __FlashStringHelper *message) {
+inline Syslog &Syslog::_sendLog(uint16_t pri, const __FlashStringHelper *message) {
   int result;
 
   if ((this->_server == NULL && this->_ip == INADDR_NONE) || this->_port == 0)
