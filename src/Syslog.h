@@ -15,7 +15,7 @@
 
 // compatibility with other platforms
 // add missing vsnprintf_P method
-#if !defined(ARDUINO_ARCH_AVR) || !defined(ARDUINO_ARCH_ESP8266) || !defined(vsnprintf_P)
+#if !defined(ARDUINO_ARCH_AVR) && !defined(ARDUINO_ARCH_ESP8266) && !defined(vsnprintf_P) && !defined(ESP8266)
 #define vsnprintf_P(buf, len, fmt, args) vsnprintf((buf), (len), (fmt), (args))
 #endif
 
