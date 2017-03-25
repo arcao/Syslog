@@ -1,10 +1,9 @@
 # Syslog
 
-[![Join the chat at https://gitter.im/arcao/Syslog](https://badges.gitter.im/arcao/Syslog.svg)](https://gitter.im/arcao/Syslog?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 An Arduino library for logging to Syslog server via `UDP` protocol in 
 [IETF (RFC 5424)] and [BSD (RFC 3164)] message format
 
-[![Build Status](https://travis-ci.org/arcao/Syslog.svg?branch=master)](https://travis-ci.org/arcao/Syslog)
+[![Build Status](https://travis-ci.org/arcao/Syslog.svg?branch=master)](https://travis-ci.org/arcao/Syslog) [![Join the chat at https://gitter.im/arcao/Syslog](https://badges.gitter.im/arcao/Syslog.svg)](https://gitter.im/arcao/Syslog?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 How to use, see [examples].
 
