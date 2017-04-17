@@ -69,129 +69,125 @@ Syslog &Syslog::logMask(uint8_t priMask) {
 }
 
 
-Syslog &Syslog::log(uint16_t pri, const __FlashStringHelper *message) {
+bool Syslog::log(uint16_t pri, const __FlashStringHelper *message) {
   return this->_sendLog(pri, message);
 }
 
-Syslog &Syslog::log(uint16_t pri, const String &message) {
+bool Syslog::log(uint16_t pri, const String &message) {
   return this->_sendLog(pri, message.c_str());
 }
 
-Syslog &Syslog::log(uint16_t pri, const char *message) {
+bool Syslog::log(uint16_t pri, const char *message) {
   return this->_sendLog(pri, message);
 }
 
 
-Syslog &Syslog::vlogf(uint16_t pri, const char *fmt, va_list args) {
+bool Syslog::vlogf(uint16_t pri, const char *fmt, va_list args) {
   char *message;
   size_t len;
+  bool result;
 
   message = new char[SYSLOG_FMT_BUFFER_SIZE + 1];
-  if (!message)
-    return *this;
 
   len = vsnprintf(message, SYSLOG_FMT_BUFFER_SIZE, fmt, args);
   if (len > SYSLOG_FMT_BUFFER_SIZE) {
     delete[] message;
     message = new char[len + 1];
 
-    if (!message)
-      return *this;
-
     vsnprintf(message, SYSLOG_FMT_BUFFER_SIZE, fmt, args);
   }
 
-  this->_sendLog(pri, message);
+  result = this->_sendLog(pri, message);
 
   delete[] message;
-  return *this;
+  return result;
 }
 
-Syslog &Syslog::vlogf_P(uint16_t pri, PGM_P fmt_P, va_list args) {
+bool Syslog::vlogf_P(uint16_t pri, PGM_P fmt_P, va_list args) {
   char *message;
   size_t len;
+  bool result;
 
   message = new char[SYSLOG_FMT_BUFFER_SIZE + 1];
-  if (!message)
-    return *this;
 
   len = vsnprintf_P(message, SYSLOG_FMT_BUFFER_SIZE, fmt_P, args);
   if (len > SYSLOG_FMT_BUFFER_SIZE) {
     delete[] message;
     message = new char[len + 1];
 
-    if (!message)
-      return *this;
-
     vsnprintf(message, SYSLOG_FMT_BUFFER_SIZE, fmt_P, args);
   }
 
-  this->_sendLog(pri, message);
+  result = this->_sendLog(pri, message);
 
   delete[] message;
-  return *this;
+  return result;
 }
 
 
-Syslog &Syslog::logf(uint16_t pri, const char *fmt, ...) {
+bool Syslog::logf(uint16_t pri, const char *fmt, ...) {
   va_list args;
+  bool result;
 
   va_start(args, fmt);
-  this->vlogf(pri, fmt, args);
+  result = this->vlogf(pri, fmt, args);
   va_end(args);
-  return *this;
+  return result;
 }
 
-Syslog &Syslog::logf(const char *fmt, ...) {
+bool Syslog::logf(const char *fmt, ...) {
   va_list args;
+  bool result;
 
   va_start(args, fmt);
-  this->vlogf(this->_priDefault, fmt, args);
+  result = this->vlogf(this->_priDefault, fmt, args);
   va_end(args);
-  return *this;
+  return result;
 }
 
-Syslog &Syslog::logf_P(uint16_t pri, PGM_P fmt_P, ...) {
+bool Syslog::logf_P(uint16_t pri, PGM_P fmt_P, ...) {
   va_list args;
+  bool result;
 
   va_start(args, fmt_P);
-  this->vlogf_P(pri, fmt_P, args);
+  result = this->vlogf_P(pri, fmt_P, args);
   va_end(args);
-  return *this;
+  return result;
 }
 
-Syslog &Syslog::logf_P(PGM_P fmt_P, ...) {
+bool Syslog::logf_P(PGM_P fmt_P, ...) {
   va_list args;
+  bool result;
 
   va_start(args, fmt_P);
-  this->vlogf_P(this->_priDefault, fmt_P, args);
+  result = this->vlogf_P(this->_priDefault, fmt_P, args);
   va_end(args);
-  return *this;
+  return result;
 }
 
-Syslog &Syslog::log(const __FlashStringHelper *message) {
+bool Syslog::log(const __FlashStringHelper *message) {
   return this->_sendLog(this->_priDefault, message);
 }
 
-Syslog &Syslog::log(const String &message) {
+bool Syslog::log(const String &message) {
   return this->_sendLog(this->_priDefault, message.c_str());
 }
 
-Syslog &Syslog::log(const char *message) {
+bool Syslog::log(const char *message) {
   return this->_sendLog(this->_priDefault, message);
 }
 
 // Private Methods /////////////////////////////////////////////////////////////
 
-inline Syslog &Syslog::_sendLog(uint16_t pri, const char *message) {
+inline bool Syslog::_sendLog(uint16_t pri, const char *message) {
   int result;
 
   if ((this->_server == NULL && this->_ip == INADDR_NONE) || this->_port == 0)
-    return *this;
+    return false;
 
   // Check priority against priMask values.
   if ((LOG_MASK(LOG_PRI(pri)) & this->_priMask) == 0)
-    return *this;
+    return true;
 
   // Set default facility if none specified.
   if ((pri & LOG_FACMASK) == 0)
@@ -204,7 +200,7 @@ inline Syslog &Syslog::_sendLog(uint16_t pri, const char *message) {
   }
 
   if (result != 1)
-    return *this;
+    return false;
 
   // IETF Doc: https://tools.ietf.org/html/rfc5424
   // BSD Doc: https://tools.ietf.org/html/rfc3164
@@ -226,18 +222,18 @@ inline Syslog &Syslog::_sendLog(uint16_t pri, const char *message) {
   this->_client->print(message);
   this->_client->endPacket();
 
-  return *this;
+  return true;
 }
 
-inline Syslog &Syslog::_sendLog(uint16_t pri, const __FlashStringHelper *message) {
+inline bool Syslog::_sendLog(uint16_t pri, const __FlashStringHelper *message) {
   int result;
 
   if ((this->_server == NULL && this->_ip == INADDR_NONE) || this->_port == 0)
-    return *this;
+    return false;
 
   // Check priority against priMask values.
   if ((LOG_MASK(LOG_PRI(pri)) & this->_priMask) == 0)
-    return *this;
+    return true;
 
   // Set default facility if none specified.
   if ((pri & LOG_FACMASK) == 0)
@@ -250,7 +246,7 @@ inline Syslog &Syslog::_sendLog(uint16_t pri, const __FlashStringHelper *message
   }
 
   if (result != 1)
-    return *this;
+    return false;
 
   // IETF Doc: https://tools.ietf.org/html/rfc5424
   // BSD Doc: https://tools.ietf.org/html/rfc3164
@@ -273,5 +269,5 @@ inline Syslog &Syslog::_sendLog(uint16_t pri, const __FlashStringHelper *message
   this->_client->endPacket();
 
 
-  return *this;
+  return true;
 }

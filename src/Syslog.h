@@ -94,8 +94,8 @@ class Syslog {
     uint16_t _priDefault;
     uint8_t _priMask = 0xff;
 
-    Syslog &_sendLog(uint16_t pri, const char *message);
-    Syslog &_sendLog(uint16_t pri, const __FlashStringHelper *message);
+    bool _sendLog(uint16_t pri, const char *message);
+    bool _sendLog(uint16_t pri, const __FlashStringHelper *message);
 
   public:
     Syslog(UDP &client, uint8_t protocol = SYSLOG_PROTO_IETF);
@@ -110,22 +110,22 @@ class Syslog {
 
     Syslog &logMask(uint8_t priMask);
 
-    Syslog &log(uint16_t pri, const __FlashStringHelper *message);
-    Syslog &log(uint16_t pri, const String &message);
-    Syslog &log(uint16_t pri, const char *message);
+    bool log(uint16_t pri, const __FlashStringHelper *message);
+    bool log(uint16_t pri, const String &message);
+    bool log(uint16_t pri, const char *message);
 
-    Syslog &vlogf(uint16_t pri, const char *fmt, va_list args) __attribute__((format(printf, 3, 0)));
-    Syslog &vlogf_P(uint16_t pri, PGM_P fmt_P, va_list args) __attribute__((format(printf, 3, 0)));
+    bool vlogf(uint16_t pri, const char *fmt, va_list args) __attribute__((format(printf, 3, 0)));
+    bool vlogf_P(uint16_t pri, PGM_P fmt_P, va_list args) __attribute__((format(printf, 3, 0)));
     
-    Syslog &logf(uint16_t pri, const char *fmt, ...) __attribute__((format(printf, 3, 4)));
-    Syslog &logf(const char *fmt, ...) __attribute__((format(printf, 2, 3)));
+    bool logf(uint16_t pri, const char *fmt, ...) __attribute__((format(printf, 3, 4)));
+    bool logf(const char *fmt, ...) __attribute__((format(printf, 2, 3)));
 
-    Syslog &logf_P(uint16_t pri, PGM_P fmt_P, ...) __attribute__((format(printf, 3, 4)));
-    Syslog &logf_P(PGM_P fmt_P, ...) __attribute__((format(printf, 2, 3)));
+    bool logf_P(uint16_t pri, PGM_P fmt_P, ...) __attribute__((format(printf, 3, 4)));
+    bool logf_P(PGM_P fmt_P, ...) __attribute__((format(printf, 2, 3)));
 
-    Syslog &log(const __FlashStringHelper *message);
-    Syslog &log(const String &message);
-    Syslog &log(const char *message);
+    bool log(const __FlashStringHelper *message);
+    bool log(const String &message);
+    bool log(const char *message);
 };
 
 #endif
