@@ -19,8 +19,6 @@
 #define vsnprintf_P(buf, len, fmt, args) vsnprintf((buf), (len), (fmt), (args))
 #endif
 
-// formating buffer size for logf methods (36 chars)
-#define SYSLOG_FMT_BUFFER_SIZE 36
 #define SYSLOG_NILVALUE "-"
 
 // Syslog protocol format

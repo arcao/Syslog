@@ -84,17 +84,20 @@ bool Syslog::log(uint16_t pri, const char *message) {
 
 bool Syslog::vlogf(uint16_t pri, const char *fmt, va_list args) {
   char *message;
+  size_t initialLen;
   size_t len;
   bool result;
 
-  message = new char[SYSLOG_FMT_BUFFER_SIZE + 1];
+  initialLen = strlen(fmt);
 
-  len = vsnprintf(message, SYSLOG_FMT_BUFFER_SIZE, fmt, args);
-  if (len > SYSLOG_FMT_BUFFER_SIZE) {
+  message = new char[initialLen + 1];
+
+  len = vsnprintf(message, initialLen, fmt, args);
+  if (len > initialLen) {
     delete[] message;
     message = new char[len + 1];
 
-    vsnprintf(message, SYSLOG_FMT_BUFFER_SIZE, fmt, args);
+    vsnprintf(message, len, fmt, args);
   }
 
   result = this->_sendLog(pri, message);
@@ -105,17 +108,20 @@ bool Syslog::vlogf(uint16_t pri, const char *fmt, va_list args) {
 
 bool Syslog::vlogf_P(uint16_t pri, PGM_P fmt_P, va_list args) {
   char *message;
+  size_t initialLen;
   size_t len;
   bool result;
 
-  message = new char[SYSLOG_FMT_BUFFER_SIZE + 1];
+  initialLen = strlen_P(fmt_P);
 
-  len = vsnprintf_P(message, SYSLOG_FMT_BUFFER_SIZE, fmt_P, args);
-  if (len > SYSLOG_FMT_BUFFER_SIZE) {
+  message = new char[initialLen + 1];
+
+  len = vsnprintf_P(message, initialLen, fmt_P, args);
+  if (len > initialLen) {
     delete[] message;
     message = new char[len + 1];
 
-    vsnprintf(message, SYSLOG_FMT_BUFFER_SIZE, fmt_P, args);
+    vsnprintf(message, len, fmt_P, args);
   }
 
   result = this->_sendLog(pri, message);
