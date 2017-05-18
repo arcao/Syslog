@@ -92,7 +92,7 @@ bool Syslog::vlogf(uint16_t pri, const char *fmt, va_list args) {
 
   message = new char[initialLen + 1];
 
-  len = vsnprintf(message, initialLen, fmt, args);
+  len = vsnprintf(message, initialLen + 1, fmt, args);
   if (len > initialLen) {
     delete[] message;
     message = new char[len + 1];
