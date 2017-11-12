@@ -50,10 +50,7 @@ void loop() {
   // syslog.
   syslog.log(LOG_INFO, "Begin loop");
 
-  // Log message can be formated like with printf function, but result message 
-  // can have 80 chars max. This limitation is because of low RAM in some 
-  // hardware. Anyway this can be easily increased or decreased. Search 
-  // SYSLOG_FMT_BUFFER_SIZE in Syslog.h.
+  // Log message can be formated like with printf function.
   syslog.logf(LOG_ERR,  "This is error message no. %d", iteration);
   syslog.logf(LOG_INFO, "This is info message no. %d", iteration);
 
