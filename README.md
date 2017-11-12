@@ -54,8 +54,6 @@ Syslog syslog(udpClient, SYSLOG_PROTO_BSD);
    `TIMESTAMP` field is completely ommited. Syslog server should use a time
    of receiving message in this case. It is OK in most cases. This issue will be
    fixed in some of the next releases.
- - The `logf`/`vlogf` functions allocate formatting buffer for `80` chars. If you
-   need more or less, please change `SYSLOG_FMT_BUFFER_SIZE` in `Syslog.h`
    
 
 [IETF (RFC 5424)]: https://tools.ietf.org/html/rfc5424
