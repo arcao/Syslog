@@ -92,12 +92,12 @@ bool Syslog::vlogf(uint16_t pri, const char *fmt, va_list args) {
 
   message = new char[initialLen + 1];
 
-  len = vsnprintf(message, initialLen, fmt, args);
+  len = vsnprintf(message, initialLen + 1, fmt, args);
   if (len > initialLen) {
     delete[] message;
     message = new char[len + 1];
 
-    vsnprintf(message, len, fmt, args);
+    vsnprintf(message, len + 1, fmt, args);
   }
 
   result = this->_sendLog(pri, message);
@@ -116,12 +116,12 @@ bool Syslog::vlogf_P(uint16_t pri, PGM_P fmt_P, va_list args) {
 
   message = new char[initialLen + 1];
 
-  len = vsnprintf_P(message, initialLen, fmt_P, args);
+  len = vsnprintf_P(message, initialLen + 1, fmt_P, args);
   if (len > initialLen) {
     delete[] message;
     message = new char[len + 1];
 
-    vsnprintf(message, len, fmt_P, args);
+    vsnprintf(message, len + 1, fmt_P, args);
   }
 
   result = this->_sendLog(pri, message);
