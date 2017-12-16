@@ -14,6 +14,7 @@ Syslog::Syslog(UDP &client, uint8_t protocol) {
   this->_deviceHostname = SYSLOG_NILVALUE;
   this->_appName = SYSLOG_NILVALUE;
   this->_priDefault = LOG_KERN;
+  this->_serialPrint = false;
 }
 
 Syslog::Syslog(UDP &client, const char* server, uint16_t port, const char* deviceHostname, const char* appName, uint16_t priDefault, uint8_t protocol) {
@@ -24,6 +25,7 @@ Syslog::Syslog(UDP &client, const char* server, uint16_t port, const char* devic
   this->_deviceHostname = (deviceHostname == NULL) ? SYSLOG_NILVALUE : deviceHostname;
   this->_appName = (appName == NULL) ? SYSLOG_NILVALUE : appName;
   this->_priDefault = priDefault;
+  this->_serialPrint = false;
 }
 
 Syslog::Syslog(UDP &client, IPAddress ip, uint16_t port, const char* deviceHostname, const char* appName, uint16_t priDefault, uint8_t protocol) {
@@ -34,6 +36,7 @@ Syslog::Syslog(UDP &client, IPAddress ip, uint16_t port, const char* deviceHostn
   this->_deviceHostname = (deviceHostname == NULL) ? SYSLOG_NILVALUE : deviceHostname;
   this->_appName = (appName == NULL) ? SYSLOG_NILVALUE : appName;
   this->_priDefault = priDefault;
+  this->_serialPrint = false;
 }
 
 Syslog &Syslog::server(const char* server, uint16_t port) {
@@ -183,14 +186,24 @@ bool Syslog::log(const char *message) {
   return this->_sendLog(this->_priDefault, message);
 }
 
+void Syslog::setSerialPrint(bool serialPrint) {
+   this->_serialPrint = serialPrint;
+}
+
 // Private Methods /////////////////////////////////////////////////////////////
 
 inline bool Syslog::_sendLog(uint16_t pri, const char *message) {
-  int result;
-
+   int result;
+  
+  if (this->_serialPrint)
+  {
+     Serial.printf("%s: %s\r\n", this->_getPriorityString(pri).c_str(), message);
+  }
+  
   if ((this->_server == NULL && this->_ip == INADDR_NONE) || this->_port == 0)
-    return false;
-
+  {
+     return false;
+  }
   // Check priority against priMask values.
   if ((LOG_MASK(LOG_PRI(pri)) & this->_priMask) == 0)
     return true;
@@ -198,13 +211,11 @@ inline bool Syslog::_sendLog(uint16_t pri, const char *message) {
   // Set default facility if none specified.
   if ((pri & LOG_FACMASK) == 0)
     pri = LOG_MAKEPRI(LOG_FAC(this->_priDefault), pri);
-
   if (this->_server != NULL) {
     result = this->_client->beginPacket(this->_server, this->_port);
   } else {
     result = this->_client->beginPacket(this->_ip, this->_port);
   }
-
   if (result != 1)
     return false;
 
@@ -234,6 +245,11 @@ inline bool Syslog::_sendLog(uint16_t pri, const char *message) {
 inline bool Syslog::_sendLog(uint16_t pri, const __FlashStringHelper *message) {
   int result;
 
+  if (this->_serialPrint)
+  {
+     Serial.printf("%s: %s\r\n", this->_getPriorityString(pri).c_str(), message);
+  }
+
   if ((this->_server == NULL && this->_ip == INADDR_NONE) || this->_port == 0)
     return false;
 
@@ -276,4 +292,49 @@ inline bool Syslog::_sendLog(uint16_t pri, const __FlashStringHelper *message) {
 
 
   return true;
+}
+
+String Syslog::_getPriorityString(uint16_t pri) {
+   String priorityName;
+
+   switch (pri)
+   {
+   case LOG_EMERG:
+      priorityName = "EMERGENCY";
+      break;
+
+   case LOG_ALERT:
+      priorityName = "ALERT";
+      break;
+
+   case LOG_CRIT:
+      priorityName = "CRITICAL";
+      break;
+
+   case LOG_ERR:
+      priorityName = "ERROR";
+      break;
+
+   case LOG_WARNING:
+      priorityName = "WARNING";
+      break;
+
+   case LOG_NOTICE:
+      priorityName = "NOTICE";
+      break;
+
+   case LOG_INFO:
+      priorityName = "INFO";
+      break;
+
+   case LOG_DEBUG:
+      priorityName = "DEBUG";
+      break;
+
+   default:
+      priorityName = "UNKNOWN";
+      break;
+   }
+
+   return priorityName;
 }
