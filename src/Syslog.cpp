@@ -30,6 +30,7 @@ Syslog::Syslog(UDP &client, IPAddress ip, uint16_t port, const char* deviceHostn
   this->_client = &client;
   this->_protocol = protocol;
   this->_ip = ip;
+  this->_server = NULL;
   this->_port = port;
   this->_deviceHostname = (deviceHostname == NULL) ? SYSLOG_NILVALUE : deviceHostname;
   this->_appName = (appName == NULL) ? SYSLOG_NILVALUE : appName;
@@ -44,6 +45,7 @@ Syslog &Syslog::server(const char* server, uint16_t port) {
 
 Syslog &Syslog::server(IPAddress ip, uint16_t port) {
   this->_ip = ip;
+  this->_server = NULL;
   this->_port = port;
   return *this;
 }
