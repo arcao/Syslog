@@ -10,14 +10,14 @@ Syslog	KEYWORD1
 #######################################
 #	Methods	and	Functions	(KEYWORD2)
 ####################################### 
-log	KEYWORD2	log method
-logf	KEYWORD2	log method with printf like formatting
-vlogf	KEYWORD2	log method with var_list argument
-server	KEYWORD2	set a logging server
-deviceHostname	KEYWORD2	set a current device hostname
-appName	KEYWORD2	set a application name
-defaultPriority	KEYWORD2	set a default priority
-logMask	KEYWORD2	set a log mask
+log	KEYWORD2
+logf	KEYWORD2
+vlogf	KEYWORD2
+server	KEYWORD2
+deviceHostname	KEYWORD2
+appName	KEYWORD2
+defaultPriority	KEYWORD2
+logMask	KEYWORD2
 
 #######################################
 #	Instances	(KEYWORD2)
@@ -27,39 +27,39 @@ logMask	KEYWORD2	set a log mask
 #######################################
 #	Constants	(LITERAL1)
 #######################################
-LOG_EMERG	LITERAL1	system is unusable
-LOG_ALERT	LITERAL1	action must be taken immediately
-LOG_CRIT	LITERAL1	critical conditions
-LOG_ERR	LITERAL1	error conditions
-LOG_WARNING	LITERAL1	warning conditions
-LOG_NOTICE	LITERAL1	normal but significant condition
-LOG_INFO	LITERAL1	informational
-LOG_DEBUG	LITERAL1	debug-level messages
+LOG_EMERG	LITERAL1
+LOG_ALERT	LITERAL1
+LOG_CRIT	LITERAL1
+LOG_ERR	LITERAL1
+LOG_WARNING	LITERAL1
+LOG_NOTICE	LITERAL1
+LOG_INFO	LITERAL1
+LOG_DEBUG	LITERAL1
 
-LOG_KERN	LITERAL1	kernel messages
-LOG_USER	LITERAL1	random user-level messages
-LOG_MAIL	LITERAL1	mail system
-LOG_DAEMON	LITERAL1	system daemons
-LOG_AUTH	LITERAL1	security/authorization messages
-LOG_SYSLOG	LITERAL1	messages generated internally by syslogd
-LOG_LPR	LITERAL1	line printer subsystem
-LOG_NEWS	LITERAL1	network news subsystem
-LOG_UUCP	LITERAL1	UUCP subsystem
-LOG_CRON	LITERAL1	clock daemon
-LOG_AUTHPRIV	LITERAL1	security/authorization messages (private)
-LOG_FTP	LITERAL1	ftp daemon
+LOG_KERN	LITERAL1
+LOG_USER	LITERAL1
+LOG_MAIL	LITERAL1
+LOG_DAEMON	LITERAL1
+LOG_AUTH	LITERAL1
+LOG_SYSLOG	LITERAL1
+LOG_LPR	LITERAL1
+LOG_NEWS	LITERAL1
+LOG_UUCP	LITERAL1
+LOG_CRON	LITERAL1
+LOG_AUTHPRIV	LITERAL1
+LOG_FTP	LITERAL1
 
-LOG_LOCAL0	LITERAL1	reserved for local use
-LOG_LOCAL1	LITERAL1	reserved for local use
-LOG_LOCAL2	LITERAL1	reserved for local use
-LOG_LOCAL3	LITERAL1	reserved for local use
-LOG_LOCAL4	LITERAL1	reserved for local use
-LOG_LOCAL5	LITERAL1	reserved for local use
-LOG_LOCAL6	LITERAL1	reserved for local use
-LOG_LOCAL7	LITERAL1	reserved for local use
+LOG_LOCAL0	LITERAL1
+LOG_LOCAL1	LITERAL1
+LOG_LOCAL2	LITERAL1
+LOG_LOCAL3	LITERAL1
+LOG_LOCAL4	LITERAL1
+LOG_LOCAL5	LITERAL1
+LOG_LOCAL6	LITERAL1
+LOG_LOCAL7	LITERAL1
 
-LOG_MASK	LITERAL1	macro to convert severity to priMask
-LOG_UPTO	LITERAL1	macro to convert severity to priMask with allow lower severities
+LOG_MASK	LITERAL1
+LOG_UPTO	LITERAL1
 
-SYSLOG_PROTO_IETF	LITERAL1	use syslog protocol IETF (RFC 5424)
-SYSLOG_PROTO_BSD	LITERAL1	use syslog protocol BSD (RFC 3164)
+SYSLOG_PROTO_IETF	LITERAL1
+SYSLOG_PROTO_BSD	LITERAL1
