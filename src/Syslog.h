@@ -91,9 +91,12 @@ class Syslog {
     const char* _appName;
     uint16_t _priDefault;
     uint8_t _priMask = 0xff;
+    bool _serialPrint;
 
     bool _sendLog(uint16_t pri, const char *message);
     bool _sendLog(uint16_t pri, const __FlashStringHelper *message);
+
+    String _getPriorityString(uint16_t pri);
 
   public:
     Syslog(UDP &client, uint8_t protocol = SYSLOG_PROTO_IETF);
@@ -105,6 +108,7 @@ class Syslog {
     Syslog &deviceHostname(const char* deviceHostname);
     Syslog &appName(const char* appName);
     Syslog &defaultPriority(uint16_t pri = LOG_KERN);
+    
 
     Syslog &logMask(uint8_t priMask);
 
@@ -124,6 +128,8 @@ class Syslog {
     bool log(const __FlashStringHelper *message);
     bool log(const String &message);
     bool log(const char *message);
+
+    void setSerialPrint(bool serialPrint);
 };
 
 #endif
