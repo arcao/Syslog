@@ -1,0 +1,88 @@
+name: Compile examples
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  compile:
+    name: ${{ matrix.board.fqbn }}
+    runs-on: ubuntu-24.04
+
+    strategy:
+      fail-fast: false
+      matrix:
+        board:
+          - fqbn: arduino:avr:uno
+            platforms: |
+              - name: arduino:avr
+            libraries: |
+              - source-path: ./
+              - name: Ethernet
+            sketch-paths: |
+              - examples/SimpleLogging
+              - examples/AdvancedLogging
+
+          - fqbn: arduino:avr:mega
+            platforms: |
+              - name: arduino:avr
+            libraries: |
+              - source-path: ./
+              - name: Ethernet
+              - name: WiFi
+            sketch-paths: |
+              - examples/SimpleLogging
+              - examples/AdvancedLogging
+              - examples/SimpleLoggingWiFi
+
+          - fqbn: arduino:avr:yun
+            platforms: |
+              - name: arduino:avr
+            libraries: |
+              - source-path: ./
+              - name: Bridge
+            sketch-paths: |
+              - examples/SimpleLoggingYun
+
+          - fqbn: arduino:samd:mkr1000
+            platforms: |
+              - name: arduino:samd
+            libraries: |
+              - source-path: ./
+              - name: WiFi101
+            sketch-paths: |
+              - examples/SimpleLoggingWiFi101_MKR1000
+
+          - fqbn: arduino:samd:nano_33_iot
+            platforms: |
+              - name: arduino:samd
+            libraries: |
+              - source-path: ./
+              - name: WiFiNINA
+            sketch-paths: |
+              - examples/SimpleLoggingWiFiNINA
+
+          - fqbn: esp8266:esp8266:nodemcuv2
+            platforms: |
+              - name: esp8266:esp8266
+                source-url: https://arduino.esp8266.com/stable/package_esp8266com_index.json
+            libraries: |
+              - source-path: ./
+            sketch-paths: |
+              - examples/SimpleLoggingESP8266
+              - examples/AdvancedLoggingESP8266
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Compile examples
+        uses: arduino/compile-sketches@v1
+        with:
+          fqbn: ${{ matrix.board.fqbn }}
+          platforms: ${{ matrix.board.platforms }}
+          libraries: ${{ matrix.board.libraries }}
+          sketch-paths: ${{ matrix.board.sketch-paths }}
+          enable-warnings-report: true
