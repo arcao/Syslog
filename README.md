@@ -31,8 +31,35 @@ of boards and shields, including:
  - Arduino WiFi Shield
  - Intel Galileo/Edison
  - Arduino/Genuino MKR1000
+ - Arduino boards with WiFiNINA module (Nano 33 IoT, MKR WiFi 1010, UNO WiFi Rev2)
  - [Arduino module RTL00(RTL8710AF), F11AMIM13 (RTL8711AM)][RTLDUINO]
  - ... you tell me!
+
+## Usage notes
+ - **Open the UDP socket first.** Some network libraries (e.g. Ethernet, WiFi
+   Shield, WiFiNINA) do not send anything until the UDP socket is opened. Call
+   `udpClient.begin(localPort)` with any free local port after the network is
+   connected and before the first `log`/`logf` call. It is harmless on other
+   platforms, so it is a good habit to always do it:
+
+   ```c
+   udpClient.begin(8888);
+   ```
+
+ - **Strings are not copied.** The constructor and the `server`,
+   `deviceHostname` and `appName` methods store only pointers to the passed
+   strings. The strings must stay valid and unchanged for the whole time the
+   `Syslog` instance is used, so use string literals or global/static buffers,
+   not local variables:
+
+   ```c
+   char hostname[64]; // global buffer, NOT a local variable in setup()
+
+   void setup() {
+     readHostnameFromConfig(hostname);
+     syslog.deviceHostname(hostname);
+   }
+   ```
 
 ## Syslog message formats
 This library supports both Syslog message formats [IETF (RFC 5424)] and 
