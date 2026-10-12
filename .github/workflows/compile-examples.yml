@@ -74,6 +74,15 @@ jobs:
               - examples/SimpleLoggingESP8266
               - examples/AdvancedLoggingESP8266
 
+          - fqbn: esp32:esp32:esp32
+            platforms: |
+              - name: esp32:esp32
+                source-url: https://espressif.github.io/arduino-esp32/package_esp32_index.json
+            libraries: |
+              - source-path: ./
+            sketch-paths: |
+              - examples/SimpleLoggingESP32
+
     steps:
       - name: Checkout
         uses: actions/checkout@v5
