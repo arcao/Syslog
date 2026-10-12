@@ -23,6 +23,9 @@
 #define SYSLOG_SERVER "syslog-server"
 #define SYSLOG_PORT 514
 
+// Local UDP port used to send packets (any free port)
+#define LOCAL_PORT 8888
+
 // This device info
 #define DEVICE_HOSTNAME "my-device"
 #define APP_NAME "my-app"
@@ -56,6 +59,9 @@ void setup() {
     for (;;)
       ;
   }
+
+  // open UDP socket, required before sending any packet
+  udpClient.begin(LOCAL_PORT);
 
   // prepare syslog configuration here (can be anywhere before first call of 
   // log/logf method)

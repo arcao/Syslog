@@ -94,7 +94,11 @@ bool Syslog::vlogf(uint16_t pri, const char *fmt, va_list args) {
 
   message = new char[initialLen + 1];
 
-  len = vsnprintf(message, initialLen + 1, fmt, args);
+  // args can be traversed only once, so use a copy for the first attempt
+  va_list argsCopy;
+  va_copy(argsCopy, args);
+  len = vsnprintf(message, initialLen + 1, fmt, argsCopy);
+  va_end(argsCopy);
   if (len > initialLen) {
     delete[] message;
     message = new char[len + 1];
@@ -118,12 +122,16 @@ bool Syslog::vlogf_P(uint16_t pri, PGM_P fmt_P, va_list args) {
 
   message = new char[initialLen + 1];
 
-  len = vsnprintf_P(message, initialLen + 1, fmt_P, args);
+  // args can be traversed only once, so use a copy for the first attempt
+  va_list argsCopy;
+  va_copy(argsCopy, args);
+  len = vsnprintf_P(message, initialLen + 1, fmt_P, argsCopy);
+  va_end(argsCopy);
   if (len > initialLen) {
     delete[] message;
     message = new char[len + 1];
 
-    vsnprintf(message, len + 1, fmt_P, args);
+    vsnprintf_P(message, len + 1, fmt_P, args);
   }
 
   result = this->_sendLog(pri, message);
