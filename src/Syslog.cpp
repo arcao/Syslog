@@ -236,9 +236,10 @@ inline bool Syslog::_sendLog(uint16_t pri, const char *message) {
     this->_client->print(F("[0]: "));
   }
   this->_client->print(message);
-  this->_client->endPacket();
 
-  return true;
+  // endPacket returns 1 on success, 0 on failure (e.g. a packet dropped by the
+  // network stack)
+  return this->_client->endPacket() > 0;
 }
 
 inline bool Syslog::_sendLog(uint16_t pri, const __FlashStringHelper *message) {
@@ -282,8 +283,8 @@ inline bool Syslog::_sendLog(uint16_t pri, const __FlashStringHelper *message) {
     this->_client->print(F("[0]: "));
   }
   this->_client->print(message);
-  this->_client->endPacket();
 
-
-  return true;
+  // endPacket returns 1 on success, 0 on failure (e.g. a packet dropped by the
+  // network stack)
+  return this->_client->endPacket() > 0;
 }
